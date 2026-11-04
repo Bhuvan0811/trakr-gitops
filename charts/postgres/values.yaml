@@ -1,0 +1,21 @@
+replicaCount: 1
+image:
+  repository: postgres
+  tag: "16"
+  pullPolicy: IfNotPresent
+service:
+  port: 5432
+  targetPort: 5432
+container:
+  port: 5432
+postgres:
+  user: postgres
+  password: mysecretpassword
+  database: users
+storage:
+  size: 128Mi
+  accessMode: ReadWriteOnce
+volume:
+  mountPath: /var/lib/postgresql/data
+names:
+  pvc: postgres-pvc
