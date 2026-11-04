@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: trakr-root-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Bhuvan0811/trakr-gitops.git
+    targetRevision: main
+    path: argocd-apps          # This watches ALL .yaml files in the argocd-apps directory! 
+  destination:
+    server: 'https://kubernetes.default.svc'                                                    
+    namespace: argocd          # ArgoCD Application CRDs must live in the argocd namespace      
+  syncPolicy:
+    automated:                                                                                  
+      prune: true              # If you delete an app yaml from Git, ArgoCD deletes the app!    
+      selfHeal: true
