@@ -1,0 +1,15 @@
+replicaCount: 1
+image:
+  repository: bhuvank08/trakr-users
+  tag: v5
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+container:
+  port: 8000
+env:
+  HOST: "0.0.0.0"
+  PORT: "8000"
+  WORKERS: "1"
