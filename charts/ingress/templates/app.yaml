@@ -7,8 +7,6 @@ metadata:
     nginx.ingress.kubernetes.io/auth-response-headers: "X-Actor-Id,X-Actor-Type,"
     nginx.ingress.kubernetes.io/enable-opentelemetry: "true"
     nginx.ingress.kubernetes.io/opentelemetry-trust-incoming-span: "true"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      set $dummy_val "$opentelemetry_context_traceparent";
 spec:
   ingressClassName: nginx
   rules:
