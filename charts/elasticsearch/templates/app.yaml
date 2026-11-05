@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+spec:
+  clusterIP: None
+  selector:
+    app: elasticsearch
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.container.port }}
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: elasticsearch
+spec:
+  serviceName: elasticsearch
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+        - name: elasticsearch-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.container.port }}
+          env:
+            - name: discovery.type
+              value: "{{ .Values.env.discoveryType }}"
+            - name: xpack.security.enabled
+              value: "{{ .Values.env.xpackSecurityEnabled }}"
+            - name: ES_JAVA_OPTS
+              value: "{{ .Values.env.esJavaOpts }}"
+          volumeMounts:
+            - name: elasticsearch-storage
+              mountPath: {{ .Values.volume.mountPath }}
+  volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-storage
+      spec:
+        accessModes:
+          - {{ .Values.storage.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.storage.size }}

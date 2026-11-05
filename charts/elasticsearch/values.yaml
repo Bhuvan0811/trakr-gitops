@@ -1,0 +1,18 @@
+replicaCount: 1
+image:
+  repository: docker.elastic.co/elasticsearch/elasticsearch
+  tag: 8.14.3
+  pullPolicy: IfNotPresent
+service:
+  port: 9200
+container:
+  port: 9200
+env:
+  discoveryType: "single-node"
+  xpackSecurityEnabled: "false"
+  esJavaOpts: "-Xms256m -Xmx256m"
+storage:
+  size: 512Mi
+  accessMode: ReadWriteOnce
+volume:
+  mountPath: /usr/share/elasticsearch/data
