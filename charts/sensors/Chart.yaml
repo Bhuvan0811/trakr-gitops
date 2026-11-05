@@ -1,0 +1,6 @@
+apiVersion: v2
+name: sensors
+description: Helm chart for sensors service
+type: application
+version: 0.1.0
+appVersion: "1.0"

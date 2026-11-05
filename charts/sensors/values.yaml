@@ -1,0 +1,14 @@
+replicaCount: 1
+image:
+  repository: bhuvank08/trakr-sensors
+  tag: v2
+  pullPolicy: Always
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8001
+container:
+  port: 8001
+env:
+  HOST: "0.0.0.0"
+  PORT: "8001"

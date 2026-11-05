@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-sensors
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: sensors
+  template:
+    metadata:
+      labels:
+        app: sensors
+      annotations:
+        instrumentation.opentelemetry.io/inject-python: "true"
+        instrumentation.opentelemetry.io/container-names: "sensors-container"
+    spec:
+      containers:
+        - name: sensors-container
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.container.port }}
+          env:
+            - name: HOST
+              value: "{{ .Values.env.HOST }}"
+            - name: PORT
+              value: "{{ .Values.env.PORT }}"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sensors
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: sensors
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
