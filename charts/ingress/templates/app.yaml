@@ -1,0 +1,44 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/auth-url: {{ .Values.authUrl | quote }}
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Actor-Id,X-Actor-Type,"
+    nginx.ingress.kubernetes.io/enable-opentelemetry: "true"
+    nginx.ingress.kubernetes.io/opentelemetry-trust-incoming-span: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      set $dummy_val "$opentelemetry_context_traceparent";
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /users/
+            pathType: Prefix
+            backend:
+              service:
+                name: users
+                port:
+                  number: 80
+          - path: /sensors/
+            pathType: Prefix
+            backend:
+              service:
+                name: sensors
+                port:
+                  number: 80
+          - path: /activities/
+            pathType: Prefix
+            backend:
+              service:
+                name: activities
+                port:
+                  number: 80
+          - path: /reports/
+            pathType: Prefix
+            backend:
+              service:
+                name: reports
+                port:
+                  number: 80
