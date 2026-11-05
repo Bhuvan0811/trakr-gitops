@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-service
+  namespace: argocd 
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://grafana.github.io/helm-charts'  # Official 3rd-party Helm repo            
+    chart: grafana                                    # Chart name                              
+    targetRevision: 8.5.0                             # Pinned version                          
+    helm:
+      values: |
+        adminPassword: admin
+        service:
+          type: ClusterIP
+          port: 80
+        persistence:                                                                            
+          enabled: false   # Keeps it lightweight for the demo (no PV needed)
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi                                                                       
+  destination:                                                                                  
+    server: 'https://kubernetes.default.svc'                                                    
+    namespace: monitoring                             # Isolated platform namespace
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true                          # Auto-creates 'monitoring' namespace
