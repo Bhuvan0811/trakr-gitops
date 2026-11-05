@@ -15,19 +15,36 @@ spec:
     targetRevision: 8.5.0                             # Pinned version                          
     helm:
       values: |
-        adminPassword: admin
+        admin:
+          existingSecret: "grafana-admin-secret"
+          userKey: "admin-user"
+          passwordKey: "admin-password"
         service:
           type: ClusterIP
           port: 80
-        persistence:                                                                            
-          enabled: false   # Keeps it lightweight for the demo (no PV needed)
+        persistence:
+          enabled: false 
         resources:
           limits:
             cpu: 200m
             memory: 256Mi
           requests:
             cpu: 100m
-            memory: 128Mi                                                                       
+            memory: 128Mi     
+      # values: |
+      #   adminPassword: admin
+      #   service:
+      #     type: ClusterIP
+      #     port: 80
+      #   persistence:                                                                            
+      #     enabled: false   # Kept lightweight for the demo (no PV needed)
+      #   resources:
+      #     limits:
+      #       cpu: 200m
+      #       memory: 256Mi
+      #     requests:
+      #       cpu: 100m
+      #       memory: 128Mi                                                                       
   destination:                                                                                  
     server: 'https://kubernetes.default.svc'                                                    
     namespace: monitoring                             # Isolated platform namespace
