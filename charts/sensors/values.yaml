@@ -1,7 +1,7 @@
 replicaCount: 1
 image:
   repository: bhuvank08/trakr-sensors
-  tag: v2
+  tag: v3
   pullPolicy: Always
 service:
   type: ClusterIP
